@@ -1,0 +1,233 @@
+---
+layout: default
+---
+
+<script>
+
+  function save(){
+
+    var all = document.getElementById("landscape").children;
+
+    var images = [];
+
+    for (var d=0, max=all.length; d < max; d++) {
+
+     var image_src = '';
+
+     image_src = all[d].innerHTML;
+     image_src_array = image_src.split('"');
+     image_src = image_src_array[1];
+
+     var store = {};
+     store['src'] = image_src;
+     store['top'] = all[d].style.top;
+     store['left'] = all[d].style.left;
+     store['width'] = document.getElementById(all[d].id + '-image').width;
+     images.push(store);
+
+    }
+
+    var images_json = JSON.stringify(images);
+    console.log(images_json);
+    Cookies.set('image_store',images_json);
+  }
+
+  function getId(src){
+    var id_array = src.split("/");
+    for (var j=0, max=id_array.length; j < max; j++) {
+      id = id_array[j];
+    }
+    id = id.replace(".png","");
+    id = id.replace(".jpg","");
+    id = id.replace(".jpeg","");
+    return id;
+  }
+
+  function addNew(sel){
+
+    var src = sel.value;
+    var width = sel.options[sel.selectedIndex].text
+
+    id = getId(src);
+
+    let div = document.createElement('div');
+    div.setAttribute("class", "draggable");
+    div.id = id;
+    div.style.width = width + 'px';
+    div.style.top = '50px';
+    div.style.left = '50px';
+
+    let img = document.createElement('img');
+    img.src = src;
+    img.width = width;
+    img.id = id + '-image';
+
+    div.appendChild(img);
+    document.getElementById('landscape').appendChild(div);
+
+    let $draggables = $('.draggable').draggabilly({
+      // contain to parent element
+      containment: true,
+      grid: [ 20, 20 ]
+    });
+
+    save();
+
+  }
+
+  function buildNew(image){
+
+    var src = image.src;
+    var top = image.top;
+    var left = image.left;
+    var width = image.width;
+
+    id = getId(src);
+
+    //console.log("id:" + id);
+    //console.log("top:" + top);
+    //console.log("left:" + left);
+    //console.log("width:" + width);
+    //console.log("src:" + src);
+
+    let div = document.createElement('div');
+    div.setAttribute("class", "draggable");
+    div.id = id;
+    div.style.width=width;
+    div.style.top=top;
+    div.style.left=left;
+
+    let img = document.createElement('img');
+    img.src = src;
+    img.width = width;
+    img.id = id + '-image';
+
+    div.appendChild(img);
+    //console.log(div);
+    document.getElementById('landscape').appendChild(div);
+
+  }
+
+  function changeBackground(sel){
+    document.body.style.backgroundImage = "url('" + sel.value + "')";
+    Cookies.set('background',sel.value);
+  }
+
+  function remove(){
+    removeId = document.getElementById('selected').value;
+    console.log("removing:"+removeId);
+    document.getElementById(removeId).remove();
+    save();
+  }
+
+  function changewidth(){
+    widthId = document.getElementById('selected').value;
+    console.log("changing width:"+widthId);
+    document.getElementById(widthId).style.width = document.getElementById('width').value;
+    document.getElementById(widthId + '-image').width = document.getElementById('width').value;
+    document.getElementById(widthId + '-image').style.width = document.getElementById('width').value;
+    save();
+  }
+
+</script>
+
+<center>
+<table style="background-color:#FFF;" cellpadding="10" cellspacing="5">
+  <tr>
+    <td>
+      <select onchange="addNew(this);" style="padding:5px;">
+        <option value="">Select and Image to Add</option>
+        <option value="images/collections.png" label="Collection">150</option>
+        <option value="images/postmanaut-sitting.png" label="Postmanaut Sitting">150</option>
+        <option value="images/postmanaut-remote-work.png" label="Postmanaut Working">150</option>
+        <option value="images/postmanaut-floating.png" label="Postmanaut Floating">150</option>
+        <option value="images/postmanaut-flying.png" label="Postmanaut Flying">200</option>
+        <option value="images/postmanaut-laptop.png" label="Postmanaut on Laptop">200</option>
+        <option value="images/postmanaut-terminal.png" label="Postmanaut at Terminal">200</option>
+        <option value="images/satellite-1.png" label="Satellite One">200</option>
+        <option value="images/satellite-2.png" label="Satellite Two">200</option>
+        <option value="images/satellite-2.png" label="Satellite Three">200</option>
+        <option value="images/space-tractor.png" label="Space Dozer">200</option>
+        <option value="images/workspaces.png" label="Workspaces">200</option>
+        <option value="images/groups.png" label="Groups">200</option>
+        <option value="images/launch-rocket.png" label="Postman Launch in Rocket">200</option>
+      </select>
+    </td>
+    <td>
+      <select onchange="changeBackground(this);" style="padding:5px;">
+        <option value="">Select the Background</option>
+        <option value="backgrounds/moonscape.jpg">Moonscape</option>
+        <option value="backgrounds/space-hanger.jpg">Space Hangar</option>
+        <option value="backgrounds/alien-landscape-moon-sun.jpg">Alien Landscape with Moon and Sun</option>
+        <option value="backgrounds/big-moon-with-asteroid-belt.jpg">Big Moon with an Asteroid Belt</option>
+        <option value="backgrounds/desolate-with-saturn.jpg">Desolate with Saturn Behind</option>
+        <option value="backgrounds/space-port-1.jpg">Space Port One</option>
+        <option value="backgrounds/mission-control-orb.jpg">Mission Control One</option>
+        <option value="backgrounds/moon-landscape-apollo.jpg">Moon Landscape with Apollo</option>
+        <option value="backgrounds/moon-landscape-crater.jpg">Moon Landscape with Crater</option>
+        <option value="backgrounds/moon-landscape-earth-rising.jpg">Moon Landscape with Earth Rising</option>
+
+      </select>
+    </td>
+    <td>
+      <input type="text" id="selected" width="100" style="padding:3px;">
+      <input type="button" name="remove" value="remove" onclick="remove();">
+    </td>
+    <td>
+      <input type="text" id="width" width="15" value="150" style="padding:3px; text-align: center;">
+      <input type="button" name="change width" value="change width" onclick="changewidth();">
+    </td>
+  </tr>
+</table>
+</center>
+
+<div class="container" id="landscape" style="width:100%; border:0px;">
+  <div class="draggable" id="launchpad" name="launchpad" style="width:350px; top: 140px; left:740px; "><img src="images/postmanaut-floating.png" id="postmanaut-flowing-image" width="200"></div>
+</div>
+
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="drag.js"></script>
+<script>
+$(document).ready( function() {
+
+  Cookies.expire('image_store');
+  Cookies.expire('background');
+
+  if(Cookies.get('background')){
+    document.body.style.backgroundImage = "url('" + Cookies.get('background') + "')";
+  }
+
+  if(Cookies.get('image_store')){
+
+    var current = Cookies.get('image_store');
+    console.log(current);
+    var images = JSON.parse(current);
+    console.log(images);
+
+    document.getElementById('landscape').innerHTML = '';
+
+    for (var i=0, max=images.length; i < max; i++) {
+
+      buildNew(images[i]);
+
+    }
+
+    let $draggables = $('.draggable').draggabilly({
+      containment: true,
+      grid: [ 20, 20 ]
+    });
+
+  }
+  else{
+
+    var $draggables = $('.draggable').draggabilly({
+      // contain to parent element
+      containment: true,
+      grid: [ 20, 20 ]
+    });
+
+  }
+
+});
+
+</script>

@@ -1,0 +1,28 @@
+<head>
+  <title>Landscapes</title>
+<style>
+  body {
+    padding: 0px;
+    margin: 0px;
+  }
+
+.container {
+  height: 600px;
+  width: 1200px;
+  border: 1px solid #FFF;
+  margin: 0px;
+  padding: 0px;
+}
+.draggable {
+  width: 150px;
+  height: 150px;
+  float: left;
+}
+.draggable.is-pointer-down {
+  z-index: 2; /* above other draggies */
+}
+.draggable.is-dragging { opacity: 0.7; }
+
+</style>
+<script src="https://kinlane-productions.s3.amazonaws.com/js/cookies.js"></script>
+</head>
