@@ -64,7 +64,7 @@
     }
 
     var images_json = JSON.stringify(images);
-    console.log(images_json);
+    //console.log(images_json);
     Cookies.set('image_store',images_json);
   }
 
@@ -227,8 +227,8 @@
 <script>
 $(document).ready( function() {
 
-  Cookies.expire('image_store');
-  Cookies.expire('background');
+  //Cookies.expire('image_store');
+  //Cookies.expire('background');
 
   if(Cookies.get('background')){
     document.body.style.backgroundImage = "url('" + Cookies.get('background') + "')";
